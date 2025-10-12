@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "AI Summarizer",
+  "version": "1.0",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "summarize",
+    "translate"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
