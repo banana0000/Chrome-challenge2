@@ -5,8 +5,6 @@
   "permissions": [
     "scripting",
     "activeTab",
-    "summarize",
-    "translate"
   ],
   "action": {
     "default_popup": "popup.html"
