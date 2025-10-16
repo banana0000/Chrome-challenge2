@@ -1,31 +1,22 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>AI Summarizer & Translator</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="popup-container">
-      <div class="header">
-        <h1>Summarize & Translate</h1>
-      </div>
-
-      <label for="translator-lang" style="font-weight:600;display:block;margin-bottom:5px;">
-        Target Language:
-      </label>
-      <select id="translator-lang" style="width:100%;padding:7px 3px 7px 7px;margin-bottom:15px;font-size:1rem;">
-        <option value="en">English</option>
-        <option value="hu">Hungarian</option>
-        <option value="de">German</option>
-        <option value="fr">French</option>
-        <option value="es">Spanish</option>
-        <!-- Add more if needed -->
-      </select>
-
-      <button id="summarize">Translate & Summarize Selected Text</button>
-      <div id="result" class="result"></div>
-      <button id="copy-summary" style="display:none; margin-top: 10px;">Copy</button>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Summarizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <h1>AI Summarizer</h1>
     </div>
-    <script src="popup.js"></script>
-  </body>
+    <button id="summarize">
+      <span class="spinner" id="spinner" style="display:none;"></span>
+      <span id="summarize-label">Summarize Selected Text</span>
+    </button>
+    <div id="result" class="result"></div>
+    <button id="copy-summary">Copy</button>
+  </div>
+  <script src="popup.js"></script>
+</body>
 </html>
