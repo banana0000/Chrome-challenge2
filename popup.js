@@ -8,20 +8,29 @@ const copyBtn = document.getElementById('copy-summary');
 const lengthSelect = document.getElementById('length');
 const clearBtn = document.getElementById('clear');
 
-// Converts markdown list (- or *) with/without leading spaces to a proper HTML <ul>
+// Escape HTML to avoid unsafe injection when building list items
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Converts any lines that start with - or * (with or without a space) into an HTML <ul>
 function markdownToHtmlList(md) {
-  const lines = md
-    .split('\n')
-    .filter(line => /^\s*([-*])\s+/.test(line));
-  if (lines.length < 1) return md; // No list detected
+  const items = [];
+  const lines = String(md).split('\n');
+  for (const line of lines) {
+    const m = line.match(/^\s*([-*])\s*(.+)$/); // allow missing space after marker
+    if (m && m[2].trim().length) {
+      items.push(m[2].trim());
+    }
+  }
+  if (items.length === 0) return null;
   return (
-    "<ul>" +
-    lines
-      .map(line =>
-        `<li>${line.replace(/^\s*([-*])\s+/, '').trim()}</li>`
-      )
-      .join('') +
-    "</ul>"
+    '<ul>' + items.map(txt => `<li>${escapeHtml(txt)}</li>`).join('') + '</ul>'
   );
 }
 
@@ -100,8 +109,9 @@ summarizeBtn.addEventListener('click', async () => {
     const summary = await summarizer.summarize(selectedText);
 
     resultDiv.classList.remove('result-warning');
-    if (/^\s*([-*])\s+/.test((summary || '').trim())) {
-      resultDiv.innerHTML = markdownToHtmlList(summary);
+    const listHtml = markdownToHtmlList(summary);
+    if (listHtml) {
+      resultDiv.innerHTML = listHtml;
     } else {
       resultDiv.innerText = summary;
     }
