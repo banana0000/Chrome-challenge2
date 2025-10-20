@@ -10,6 +10,17 @@
     <div class="header">
       <h1>AI Summarizer</h1>
     </div>
+
+    <div class="controls-row">
+      <label for="length" class="visually-hidden">Summary length</label>
+      <select id="length" aria-label="Summary length">
+        <option value="short">Short</option>
+        <option value="medium" selected>Medium</option>
+        <option value="long">Long</option>
+      </select>
+      <button id="clear">Clear</button>
+    </div>
+
     <button id="summarize">
       <span class="spinner" id="spinner" style="display:none;"></span>
       <span id="summarize-label">Summarize Selected Text</span>

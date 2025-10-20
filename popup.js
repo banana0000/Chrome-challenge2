@@ -4,6 +4,10 @@ const summarizeLabel = document.getElementById('summarize-label');
 const resultDiv = document.getElementById('result');
 const copyBtn = document.getElementById('copy-summary');
 
+// Controls
+const lengthSelect = document.getElementById('length');
+const clearBtn = document.getElementById('clear');
+
 // Converts markdown list (- or *) with/without leading spaces to a proper HTML <ul>
 function markdownToHtmlList(md) {
   const lines = md
@@ -19,6 +23,11 @@ function markdownToHtmlList(md) {
       .join('') +
     "</ul>"
   );
+}
+
+function getSelectedLength() {
+  const v = (lengthSelect && lengthSelect.value) || 'medium';
+  return (v === 'short' || v === 'medium' || v === 'long') ? v : 'medium';
 }
 
 summarizeBtn.addEventListener('click', async () => {
@@ -78,7 +87,7 @@ summarizeBtn.addEventListener('click', async () => {
     const summarizer = await Summarizer.create({
       type: "key-points",    // or: tldr, teaser, headline, etc.
       format: "markdown",    // or "plain-text"
-      length: "medium",      // or: short, long
+      length: getSelectedLength(),
       monitor(m) {
         m.addEventListener('downloadprogress', (e) => {
           resultDiv.innerText = `Downloading AI model: ${(e.loaded * 100).toFixed(0)}%`;
@@ -106,6 +115,15 @@ summarizeBtn.addEventListener('click', async () => {
     summarizeLabel.innerText = "Summarize Selected Text";
   }
 });
+
+// Clear logic
+if (clearBtn) {
+  clearBtn.addEventListener('click', () => {
+    resultDiv.innerText = '';
+    resultDiv.classList.remove('result-warning');
+    copyBtn.style.display = 'none';
+  });
+}
 
 // Copy logic
 copyBtn.addEventListener('click', async () => {
