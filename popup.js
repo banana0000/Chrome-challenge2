@@ -7,6 +7,8 @@ const copyBtn = document.getElementById('copy-summary');
 // Controls
 const lengthSelect = document.getElementById('length');
 const clearBtn = document.getElementById('clear');
+const themeSwitch = document.getElementById('theme-switch');
+const themeIcon = document.querySelector('.theme-icon');
 
 // Escape HTML to avoid unsafe injection when building list items
 function escapeHtml(text) {
@@ -38,6 +40,37 @@ function getSelectedLength() {
   const v = (lengthSelect && lengthSelect.value) || 'medium';
   return (v === 'short' || v === 'medium' || v === 'long') ? v : 'medium';
 }
+
+// Theme management
+function initTheme() {
+  const savedTheme = localStorage.getItem('ai-summarizer-theme');
+  const isLight = savedTheme === 'light';
+  
+  if (isLight) {
+    document.body.classList.add('light-theme');
+    themeSwitch.checked = true;
+    themeIcon.textContent = '☀️';
+  } else {
+    themeIcon.textContent = '🌙';
+  }
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light-theme');
+  
+  if (isLight) {
+    document.body.classList.remove('light-theme');
+    themeIcon.textContent = '🌙';
+    localStorage.setItem('ai-summarizer-theme', 'dark');
+  } else {
+    document.body.classList.add('light-theme');
+    themeIcon.textContent = '☀️';
+    localStorage.setItem('ai-summarizer-theme', 'light');
+  }
+}
+
+// Initialize theme on load
+initTheme();
 
 summarizeBtn.addEventListener('click', async () => {
   summarizeBtn.disabled = true;
@@ -126,6 +159,11 @@ summarizeBtn.addEventListener('click', async () => {
   }
 });
 
+// Theme toggle logic
+if (themeSwitch) {
+  themeSwitch.addEventListener('change', toggleTheme);
+}
+
 // Clear logic
 if (clearBtn) {
   clearBtn.addEventListener('click', () => {
@@ -140,9 +178,13 @@ copyBtn.addEventListener('click', async () => {
   const text = resultDiv.innerText;
   try {
     await navigator.clipboard.writeText(text);
-    copyBtn.innerText = "Copied!";
+    const copyText = copyBtn.querySelector('.copy-text');
+    const copyIcon = copyBtn.querySelector('.copy-icon');
+    copyText.textContent = "Copied!";
+    copyIcon.textContent = "✓";
     setTimeout(() => {
-      copyBtn.innerText = "Copy";
+      copyText.textContent = "Copy Summary";
+      copyIcon.textContent = "📋";
     }, 1500);
   } catch (e) {
     alert("Copying failed.");
